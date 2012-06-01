@@ -1,42 +1,31 @@
 #!/usr/bin/env node
 
-"use strict";
-
 (function () {
 
+	'use strict';
+
 	var program = require('commander'),
+		jsdom = require('jsdom'),
 		fs = require('fs'),
+		sizzle = fs.readFileSync('./lib/sizzle.js').toString(),
 		list = function (val) {
 			return val.split(',');
 		},
-		walk = function (dir, done) {
-			var results = [];
+		walk = function (dir, success, error) {
 			fs.readdir(dir, function (err, list) {
-				var pending;
 				if (err) {
-					return done(err);
-				}
-				pending = list.length;
-				if (pending === 0) {
-					return done(null, results);
+					return error(err);
 				}
 				list.forEach(function (file) {
 					file = dir + '/' + file;
 					fs.stat(file, function (err, stat) {
+						if (err) {
+							return error(err);
+						}
 						if (stat && stat.isDirectory()) {
-							walk(file, function (err, res) {
-								results = results.concat(res);
-								pending -= 1;
-								if (pending === 0) {
-									done(null, results);
-								}
-							});
+							walk(file, success, error);
 						} else {
-							results.push(file);
-							pending -= 1;
-							if (pending === 0) {
-								done(null, results);
-							}
+							success(file);
 						}
 					});
 				});
@@ -68,11 +57,25 @@
 
 	//console.log('Loop through "' + program.path + '" and look for selector "' + program.selector + '" in file extension "' + program.extension + '"');
 
-	walk(program.path, function (err, results) {
-		if (err) {
-			throw err;
-		}
-		console.log(results);
+	walk(program.path, function (filePath) {
+		fs.readFile(filePath, 'utf8', function (err, data) {
+			if (err) {
+				throw err;
+			}
+			jsdom.env({
+				html: data,
+				src: [sizzle],
+				done: function (errors, window) {
+					var matches = window.Sizzle(program.selector),
+						matchesLen = matches.length;
+					if (matchesLen > 0) {
+						console.log('Found ' + matchesLen + (matchesLen > 1 ? ' matches' : ' match') + ' in ' + filePath);
+					}
+				}
+			});
+		});
+	}, function (err) {
+		throw err;
 	});
 
 }());
