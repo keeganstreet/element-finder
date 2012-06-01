@@ -11,21 +11,45 @@
 		list = function (val) {
 			return val.split(',');
 		},
-		walk = function (dir, success, error) {
-			fs.readdir(dir, function (err, list) {
+		walk = function (dir, options) {
+			//console.log('Walking ' + dir);
+			fs.readdir(dir, function (err, files) {
 				if (err) {
-					return error(err);
+					return options.error(err);
 				}
-				list.forEach(function (file) {
-					file = dir + '/' + file;
-					fs.stat(file, function (err, stat) {
+				files.forEach(function (file) {
+					var path = dir + '/' + file;
+					//console.log('File: ' + file);
+					fs.stat(path, function (err, stats) {
+						var i, len, extension, extensionFound = false;
 						if (err) {
-							return error(err);
+							return options.error(err);
 						}
-						if (stat && stat.isDirectory()) {
-							walk(file, success, error);
-						} else {
-							success(file);
+						// Filter out files and directories which match the ignore argument
+						for (i = 0, len = options.ignore.length; i < len; i += 1) {
+							if (file === options.ignore[i]) {
+								return;
+							}
+						}
+						if (stats.isDirectory()) {
+							walk(path, options);
+						} else if (stats.isFile()) {
+							// Filter out files whose extension does not match the extension argument
+							len = options.extension.length;
+							if (len === 0) {
+								extensionFound = true;
+							} else {
+								extension = file.substring(file.lastIndexOf('.') + 1);
+								for (i = 0; i < len; i += 1) {
+									if (extension === options.extension[i]) {
+										extensionFound = true;
+										break;
+									}
+								}
+							}
+							if (extensionFound) {
+								options.success(path);
+							}
 						}
 					});
 				});
@@ -37,6 +61,7 @@
 		.option('-p, --path <string>', 'search in this directory')
 		.option('-s, --selector <string>', 'search for this Sizzle selector')
 		.option('-x, --extension <csv list>', 'only search files with this extension (default html)', list, ['html'])
+		.option('-i, --ignore <csv list>', 'ignore files matching this pattern (default .git, .svn)', list, ['.git', '.svn'])
 		.parse(process.argv);
 
 	// Show the help if no arguments were provided
@@ -57,25 +82,30 @@
 
 	//console.log('Loop through "' + program.path + '" and look for selector "' + program.selector + '" in file extension "' + program.extension + '"');
 
-	walk(program.path, function (filePath) {
-		fs.readFile(filePath, 'utf8', function (err, data) {
-			if (err) {
-				throw err;
-			}
-			jsdom.env({
-				html: data,
-				src: [sizzle],
-				done: function (errors, window) {
-					var matches = window.Sizzle(program.selector),
-						matchesLen = matches.length;
-					if (matchesLen > 0) {
-						console.log('Found ' + matchesLen + (matchesLen > 1 ? ' matches' : ' match') + ' in ' + filePath);
-					}
+	walk(program.path, {
+		extension: program.extension,
+		ignore: program.ignore,
+		success: function (filePath) {
+			fs.readFile(filePath, 'utf8', function (err, data) {
+				if (err) {
+					throw err;
 				}
+				jsdom.env({
+					html: data,
+					src: [sizzle],
+					done: function (errors, window) {
+						var matches = window.Sizzle(program.selector),
+							matchesLen = matches.length;
+						if (matchesLen > 0) {
+							console.log('Found ' + matchesLen + (matchesLen > 1 ? ' matches' : ' match') + ' in ' + filePath);
+						}
+					}
+				});
 			});
-		});
-	}, function (err) {
-		throw err;
+		},
+		error: function (err) {
+			throw err;
+		}
 	});
 
 }());
