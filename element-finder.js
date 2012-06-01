@@ -41,50 +41,73 @@
 	}
 
 	pluralise = function(number, singular, plural) {
-		return number === 1 ? singular : plural;
+		return number.toString() + ' ' + (number === 1 ? singular : plural);
 	};
 
 	/*
-	 * Recursively loop over a directory and call the options.success callback for each file
+	 * Recursively loop over a directory and return an array of files
 	 * Only return files with an extension matching the options.extension parameter
 	 * Ignore files and directories matching the options.ignore parameter
+	 * The callback gets two arguments (err, files)
 	 */
-	walk = function (dir, options) {
+	walk = function (dir, callback, options) {
+		var results = [];
 		fs.readdir(dir, function (err, files) {
 			if (err) {
-				return options.error(err);
+				return callback(err);
 			}
+			var pending = files.length;
+			if (pending === 0) {
+				return callback(null, results);
+			}
+
 			files.forEach(function (file) {
 				var path = dir + '/' + file;
 				fs.stat(path, function (err, stats) {
-					var i, len, extension, extensionFound = false;
+					var i, len, extension, extensionFound = false, ignore = false;
 					if (err) {
-						return options.error(err);
+						return callback(err);
 					}
+
 					// Filter out files and directories which match the ignore argument
 					for (i = 0, len = options.ignore.length; i < len; i += 1) {
 						if (file === options.ignore[i]) {
-							return;
+							ignore = true;
 						}
 					}
-					if (stats.isDirectory()) {
-						walk(path, options);
+
+					if (stats.isDirectory() && ignore === false) {
+						walk(path, function (err, files) {
+							results = results.concat(files);
+							pending -= 1;
+							if (pending === 0) {
+								callback(null, results);
+							}
+						}, options);
 					} else if (stats.isFile()) {
-						// Filter out files whose extension does not match the extension argument
-						len = options.extension.length;
-						if (len === 0) {
-							extensionFound = true;
-						} else {
-							extension = file.substring(file.lastIndexOf('.') + 1);
-							for (i = 0; i < len; i += 1) {
-								if (extension === options.extension[i]) {
-									extensionFound = true;
-									break;
+
+						if (ignore === false) {
+							// Filter out files whose extension does not match the extension argument
+							len = options.extension.length;
+							if (len === 0) {
+								extensionFound = true;
+							} else {
+								extension = file.substring(file.lastIndexOf('.') + 1);
+								for (i = 0; i < len; i += 1) {
+									if (extension === options.extension[i]) {
+										extensionFound = true;
+										break;
+									}
 								}
 							}
+							if (extensionFound) {
+								results.push(path);
+							}
 						}
-						if (extensionFound) {
-							options.success(path);
+
+						pending -= 1;
+						if (pending === 0) {
+							callback(null, results);
 						}
 					}
 				});
@@ -93,32 +116,41 @@
 	};
 
 	begin = function () {
-		var numberOfFiles = 0,
-			numberOfFilesWithMatches = 0;
+		var numberOfFiles,
+			numberOfFilesWithMatches = 0,
+			processFile;
 
-		walk(program.path, {
-			extension: program.extension,
-			ignore: program.ignore,
-			success: function (filePath) {
-				var data = fs.readFileSync(filePath, 'utf8');
-				numberOfFiles += 1;
-				jsdom.env({
-					html: data,
-					src: [sizzle],
-					done: function (errors, window) {
-						var matches = window.Sizzle(program.selector),
-							matchesLen = matches.length;
-						if (matchesLen > 0) {
-							numberOfFilesWithMatches += 1;
-							console.log('Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath);
-						}
-						console.log(numberOfFiles);
+		processFile = function(i, filePath) {
+			var data = fs.readFileSync(filePath, 'utf8');
+			jsdom.env({
+				html: data,
+				src: [sizzle],
+				done: function (errors, window) {
+					var matches = window.Sizzle(program.selector),
+						matchesLen = matches.length;
+					if (matchesLen > 0) {
+						numberOfFilesWithMatches += 1;
+						console.log('Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath);
 					}
-				});
-			},
-			error: function (err) {
+					if (i === numberOfFiles - 1) {
+						console.log('Searched ' + pluralise(numberOfFiles, 'file', 'files') + ' for "' + program.selector + '" and found matches in ' + pluralise(numberOfFiles, 'file', 'files') + '.');
+					}
+				}
+			});
+		};
+
+		walk(program.path, function (err, files) {
+			var i;
+			if (err) {
 				throw err;
 			}
+			numberOfFiles = files.length;
+			for (i = 0; i < numberOfFiles; i += 1) {
+				processFile(i, files[i]);
+			}
+		}, {
+			extension: program.extension,
+			ignore: program.ignore
 		});
 	};
 
