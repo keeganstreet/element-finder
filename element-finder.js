@@ -11,50 +11,50 @@
 		list = function (val) {
 			return val.split(',');
 		},
-		walk = function (dir, options) {
-			//console.log('Walking ' + dir);
-			fs.readdir(dir, function (err, files) {
-				if (err) {
-					return options.error(err);
-				}
-				files.forEach(function (file) {
-					var path = dir + '/' + file;
-					//console.log('File: ' + file);
-					fs.stat(path, function (err, stats) {
-						var i, len, extension, extensionFound = false;
-						if (err) {
-							return options.error(err);
+		walk;
+
+	walk = function (dir, options) {
+		fs.readdir(dir, function (err, files) {
+			if (err) {
+				return options.error(err);
+			}
+			files.forEach(function (file) {
+				var path = dir + '/' + file;
+				fs.stat(path, function (err, stats) {
+					var i, len, extension, extensionFound = false;
+					if (err) {
+						return options.error(err);
+					}
+					// Filter out files and directories which match the ignore argument
+					for (i = 0, len = options.ignore.length; i < len; i += 1) {
+						if (file === options.ignore[i]) {
+							return;
 						}
-						// Filter out files and directories which match the ignore argument
-						for (i = 0, len = options.ignore.length; i < len; i += 1) {
-							if (file === options.ignore[i]) {
-								return;
-							}
-						}
-						if (stats.isDirectory()) {
-							walk(path, options);
-						} else if (stats.isFile()) {
-							// Filter out files whose extension does not match the extension argument
-							len = options.extension.length;
-							if (len === 0) {
-								extensionFound = true;
-							} else {
-								extension = file.substring(file.lastIndexOf('.') + 1);
-								for (i = 0; i < len; i += 1) {
-									if (extension === options.extension[i]) {
-										extensionFound = true;
-										break;
-									}
+					}
+					if (stats.isDirectory()) {
+						walk(path, options);
+					} else if (stats.isFile()) {
+						// Filter out files whose extension does not match the extension argument
+						len = options.extension.length;
+						if (len === 0) {
+							extensionFound = true;
+						} else {
+							extension = file.substring(file.lastIndexOf('.') + 1);
+							for (i = 0; i < len; i += 1) {
+								if (extension === options.extension[i]) {
+									extensionFound = true;
+									break;
 								}
 							}
-							if (extensionFound) {
-								options.success(path);
-							}
 						}
-					});
+						if (extensionFound) {
+							options.success(path);
+						}
+					}
 				});
 			});
-		};
+		});
+	};
 
 	program
 		.version('0.0.1')
@@ -86,21 +86,17 @@
 		extension: program.extension,
 		ignore: program.ignore,
 		success: function (filePath) {
-			fs.readFile(filePath, 'utf8', function (err, data) {
-				if (err) {
-					throw err;
-				}
-				jsdom.env({
-					html: data,
-					src: [sizzle],
-					done: function (errors, window) {
-						var matches = window.Sizzle(program.selector),
-							matchesLen = matches.length;
-						if (matchesLen > 0) {
-							console.log('Found ' + matchesLen + (matchesLen > 1 ? ' matches' : ' match') + ' in ' + filePath);
-						}
+			var data = fs.readFileSync(filePath, 'utf8');
+			jsdom.env({
+				html: data,
+				src: [sizzle],
+				done: function (errors, window) {
+					var matches = window.Sizzle(program.selector),
+						matchesLen = matches.length;
+					if (matchesLen > 0) {
+						console.log('Found ' + matchesLen + (matchesLen > 1 ? ' matches' : ' match') + ' in ' + filePath);
 					}
-				});
+				}
 			});
 		},
 		error: function (err) {
