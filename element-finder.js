@@ -6,6 +6,8 @@
 
 	var program = require('commander'),
 		jsdom = require('jsdom'),
+		ProgressBar = require('progress'),
+		progressBar,
 		fs = require('fs'),
 		sizzle = fs.readFileSync('./lib/sizzle.js').toString(),
 		list = function (val) {
@@ -14,6 +16,8 @@
 		pluralise,
 		walk,
 		begin;
+
+console.log(process.cwd);
 
 	// Initialise CLI
 	program
@@ -76,14 +80,21 @@
 						}
 					}
 
-					if (stats.isDirectory() && ignore === false) {
-						walk(path, function (err, files) {
-							results = results.concat(files);
+					if (stats.isDirectory()) {
+						if (ignore === false) {
+							walk(path, function (err, files) {
+								results = results.concat(files);
+								pending -= 1;
+								if (pending === 0) {
+									callback(null, results);
+								}
+							}, options);
+						} else {
 							pending -= 1;
 							if (pending === 0) {
 								callback(null, results);
 							}
-						}, options);
+						}
 					} else if (stats.isFile()) {
 
 						if (ignore === false) {
@@ -132,11 +143,12 @@
 						numberOfFilesWithMatches += 1;
 						console.log('Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath);
 					}
-					if (i === numberOfFiles - 1) {
-						console.log('Searched ' + pluralise(numberOfFiles, 'file', 'files') + ' for "' + program.selector + '" and found matches in ' + pluralise(numberOfFiles, 'file', 'files') + '.');
-					}
 				}
 			});
+			progressBar.tick();
+			if (i === numberOfFiles - 1) {
+				console.log('\n');
+			}
 		};
 
 		walk(program.path, function (err, files) {
@@ -145,6 +157,7 @@
 				throw err;
 			}
 			numberOfFiles = files.length;
+			progressBar = new ProgressBar('Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' [:bar] :percent :etas', {total: numberOfFiles, width: 20});
 			for (i = 0; i < numberOfFiles; i += 1) {
 				processFile(i, files[i]);
 			}
