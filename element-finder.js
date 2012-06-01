@@ -9,20 +9,18 @@
 		ProgressBar = require('progress'),
 		progressBar,
 		fs = require('fs'),
-		sizzle = fs.readFileSync('./lib/sizzle.js').toString(),
+		sizzle = fs.readFileSync(__dirname + '/lib/sizzle.js').toString(),
 		list = function (val) {
 			return val.split(',');
 		},
+		directory = process.cwd(),
 		pluralise,
 		walk,
 		begin;
 
-console.log(process.cwd);
-
 	// Initialise CLI
 	program
 		.version('0.0.1')
-		.option('-p, --path <string>', 'search in this directory')
 		.option('-s, --selector <string>', 'search for this Sizzle selector')
 		.option('-x, --extension <csv list>', 'only search files with this extension (default html)', list, ['html'])
 		.option('-i, --ignore <csv list>', 'ignore files matching this pattern (default .git, .svn)', list, ['.git', '.svn'])
@@ -31,11 +29,6 @@ console.log(process.cwd);
 	// Show the help if no arguments were provided
 	if (!process.argv.length) {
 		program.help();
-		return;
-	}
-
-	if (!program.path) {
-		console.log('The --path argument is required. Which directory do you want to search in?');
 		return;
 	}
 
@@ -151,13 +144,14 @@ console.log(process.cwd);
 			}
 		};
 
-		walk(program.path, function (err, files) {
+		walk(directory, function (err, files) {
 			var i;
 			if (err) {
 				throw err;
 			}
 			numberOfFiles = files.length;
-			progressBar = new ProgressBar('Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' [:bar] :percent :etas', {total: numberOfFiles, width: 20});
+			console.log('Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".');
+			progressBar = new ProgressBar('[:bar] :percent :etas', {total: numberOfFiles, width: 20});
 			for (i = 0; i < numberOfFiles; i += 1) {
 				processFile(i, files[i]);
 			}
