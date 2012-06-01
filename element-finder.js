@@ -4,11 +4,10 @@
 
 	'use strict';
 
-	var program = require('commander'),
+	var fs = require('fs'),
 		jsdom = require('jsdom'),
+		program = require('commander'),
 		ProgressBar = require('progress'),
-		progressBar,
-		fs = require('fs'),
 		sizzle = fs.readFileSync(__dirname + '/lib/sizzle.js').toString(),
 		list = function (val) {
 			return val.split(',');
@@ -122,7 +121,8 @@
 	begin = function () {
 		var numberOfFiles,
 			numberOfFilesWithMatches = 0,
-			processFile;
+			processFile,
+			progressBar;
 
 		processFile = function(i, filePath) {
 			var data = fs.readFileSync(filePath, 'utf8');
