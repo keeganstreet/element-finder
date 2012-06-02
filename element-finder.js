@@ -17,7 +17,7 @@
 			}
 			return arr;
 		},
-		stripQuotes = function(val) {
+		stripQuotes = function (val) {
 			var c1 = val.substr(0, 1),
 				c2 = val.substr(-1);
 			if ((c1 === '"' && c2 === '"') || (c1 === "'" && c2 === "'")) {
@@ -25,7 +25,7 @@
 			}
 			return val;
 		},
-		pluralise = function(number, singular, plural) {
+		pluralise = function (number, singular, plural) {
 			return number.toString() + ' ' + (number === 1 ? singular : plural);
 		},
 		directory = process.cwd(),
@@ -136,7 +136,7 @@
 			processFile,
 			progressBar;
 
-		processFile = function(i, filePath) {
+		processFile = function (i, filePath) {
 			var data = fs.readFileSync(filePath, 'utf8');
 			jsdom.env({
 				html: data,
