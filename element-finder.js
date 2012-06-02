@@ -12,6 +12,14 @@
 		list = function (val) {
 			return val.split(',');
 		},
+		stripQuotes = function(val) {
+			var c1 = val.substr(0, 1),
+				c2 = val.substr(-1);
+			if ((c1 === '"' && c2 === '"') || (c1 === "'" && c2 === "'")) {
+				return val.substr(1, val.length - 2);
+			}
+			return val;
+		},
 		directory = process.cwd(),
 		pluralise,
 		walk,
@@ -20,7 +28,7 @@
 	// Initialise CLI
 	program
 		.version('0.0.1')
-		.option('-s, --selector <string>', 'search for this Sizzle selector')
+		.option('-s, --selector <string>', 'search for this Sizzle selector', stripQuotes)
 		.option('-x, --extension <csv list>', 'only search files with this extension (default html)', list, ['html'])
 		.option('-i, --ignore <csv list>', 'ignore files matching this pattern (default .git, .svn)', list, ['.git', '.svn'])
 		.parse(process.argv);
