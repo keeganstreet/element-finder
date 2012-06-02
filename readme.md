@@ -7,6 +7,9 @@ progress
 Example usage:
 
 elfinder -s .awesome-list
+elfinder -s ".colours .awesome-list"
+elfinder -s .awesome-list -x "html, shtml"
+elfinder -s ".prod-row td" -i ".git, .svn, partials"
 
 Intallation:
 
