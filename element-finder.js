@@ -132,6 +132,7 @@
 	begin = function () {
 		var numberOfFiles,
 			numberOfFilesWithMatches = 0,
+			totalMatches = 0,
 			processFile,
 			progressBar;
 
@@ -145,10 +146,11 @@
 						matchesLen = matches.length;
 					if (matchesLen > 0) {
 						numberOfFilesWithMatches += 1;
-						console.log('Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath + '.');
+						totalMatches += matchesLen;
+						console.log('Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath);
 					}
 					if (i === numberOfFiles - 1) {
-						console.log('\nFound matches in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + '.');
+						console.log('\nFound ' + pluralise(totalMatches, 'match', 'matches') + ' in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + '.');
 					}
 				}
 			});
@@ -165,7 +167,7 @@
 			}
 			numberOfFiles = files.length;
 			console.log('Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".');
-			progressBar = new ProgressBar('[:bar] :percent :etas', {total: numberOfFiles, width: 20});
+			progressBar = new ProgressBar('[:bar] :percent :elapseds', {total: numberOfFiles, width: 20});
 			for (i = 0; i < numberOfFiles; i += 1) {
 				processFile(i, files[i]);
 			}

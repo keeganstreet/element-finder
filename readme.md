@@ -1,37 +1,69 @@
-Dependencies:
-jsdom
-commander
-progress
+# Element Finder
+
+Find in Files with CSS selectors.
+
+Element Finder is a Node JS app for recursively searching through a directory and finding HTML files which contain elements matching a CSS selector. The selector engine is [Sizzle](http://sizzlejs.com/) - the same selector engine used by jQuery.
 
 
-Example usage:
+## Example usage
 
-elfinder -s .awesome-list
-elfinder -s ".colours .awesome-list"
-elfinder -s .awesome-list -x "html, shtml"
-elfinder -s ".prod-row td" -i ".git, .svn, partials"
+Search for elements with a class of `awesome-list`:
 
-Intallation:
+    elfinder -s .awesome-list
 
-Make the element-finder.js script exectutable:
-CD into the element-finder directory and run:
-`chmod +x element-finder.js`
+Search for elements with a class of `awesome-list` which are descendants of an element with a class of `colours`:
 
-Add a symlink to the element-finder.js script from a directory in your PATH:
-1. Check what your path variable is set to:
-`echo $PATH`
+    elfinder -s ".colours .awesome-list"
 
-2. Check that /usr/local/bin is in your path. If not:
-`sudo mkdir /usr/local/bin`
+Search for elements with a class of `awesome-list` in files with an extension of `html` or `shtml`:
 
-3. Assuming that /usr/local/bin is present in your PATH, create a link from there to element-finder.js
-`ln -s "/Users/kestreet/Dropbox/Projects/element-finder/element-finder.js" /usr/local/bin/elfinder`
+    elfinder -s .awesome-list -x "html, shtml"
+
+Search for elements matching the `ul.boxes .box` selector, but ignore any files in the `.git`, `.svn` or `partials` folders:
+
+    elfinder -s "ul.boxes .box" -i ".git, .svn, partials"
 
 
+## Intallation
 
-Errors you might encounter:
+1. Install Node JS:
+http://nodejs.org/#download
 
-`-bash: elfinder: command not found`
+2. Install the dependencies with npm (npm comes with Node JS):
+
+```
+npm install jsdom
+npm install commander
+npm install progress
+```
+
+3. Get the Element Finder source. Download it or pull it from Github:
+https://github.com/keeganstreet
+
+4. Make the element-finder.js script exectutable. CD into the element-finder directory and run:
+
+    chmod +x element-finder.js
+
+5. Add a symlink to the element-finder.js script from a directory in your PATH:
+
+5.1. Check what your path variable is set to:
+
+    echo $PATH
+
+5.2. Check that /usr/local/bin is in your path. If not:
+
+    sudo mkdir /usr/local/bin
+
+5.3. Assuming that /usr/local/bin is present in your PATH, create a link from there to element-finder.js
+
+    ln -s "/Users/kestreet/Dropbox/Projects/element-finder/element-finder.js" /usr/local/bin/elfinder
+
+6. Crack open a beer.
+
+
+## Errors you might encounter
+
+### -bash: elfinder: command not found
+
 Have you created the symlink properly? Run `open /usr/local/bin/` and see if the elfinder link opens the element-finder.js script.
-
 
