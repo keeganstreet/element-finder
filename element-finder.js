@@ -25,8 +25,10 @@
 			}
 			return val;
 		},
+		pluralise = function(number, singular, plural) {
+			return number.toString() + ' ' + (number === 1 ? singular : plural);
+		},
 		directory = process.cwd(),
-		pluralise,
 		walk,
 		begin;
 
@@ -48,10 +50,6 @@
 		console.log('The --selector argument is required. What Sizzle selector do you want to search for?');
 		return;
 	}
-
-	pluralise = function(number, singular, plural) {
-		return number.toString() + ' ' + (number === 1 ? singular : plural);
-	};
 
 	/*
 	 * Recursively loop over a directory and return an array of files
