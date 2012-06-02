@@ -10,7 +10,12 @@
 		ProgressBar = require('progress'),
 		sizzle = fs.readFileSync(__dirname + '/lib/sizzle.js').toString(),
 		list = function (val) {
-			return val.split(',');
+			var arr = val.split(','),
+				i, len;
+			for (i = 0, len = arr.length; i < len; i += 1) {
+				arr[i] = arr[i].trim();
+			}
+			return arr;
 		},
 		stripQuotes = function(val) {
 			var c1 = val.substr(0, 1),
