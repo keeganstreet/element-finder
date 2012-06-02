@@ -145,7 +145,10 @@
 						matchesLen = matches.length;
 					if (matchesLen > 0) {
 						numberOfFilesWithMatches += 1;
-						console.log('Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath);
+						console.log('Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath + '.');
+					}
+					if (i === numberOfFiles - 1) {
+						console.log('\nFound matches in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + '.');
 					}
 				}
 			});
