@@ -36,7 +36,7 @@ Search for elements matching the `ul.boxes .box` selector, but ignore any files 
     npm install progress
     ```
 
-3. Get the Element Finder source. Download it or pull it from Github: https://github.com/keeganstreet/element-finder
+3. Get the Element Finder source. Download it or clone it from GitHub: https://github.com/keeganstreet/element-finder
 
 4. Make the element-finder.js script exectutable. CD into the element-finder directory and run:
 
@@ -46,15 +46,15 @@ Search for elements matching the `ul.boxes .box` selector, but ignore any files 
 
     5.1. Check what your path variable is set to:
 
-            echo $PATH
+        echo $PATH
 
     5.2. Check that /usr/local/bin is in your path. If not:
 
-            sudo mkdir /usr/local/bin
+        sudo mkdir /usr/local/bin
 
     5.3. Assuming that /usr/local/bin is present in your PATH, create a link from there to element-finder.js
 
-            ln -s "/Users/kestreet/Dropbox/Projects/element-finder/element-finder.js" /usr/local/bin/elfinder
+        ln -s "/Users/kestreet/Dropbox/Projects/element-finder/element-finder.js" /usr/local/bin/elfinder
 
 6. Crack open a beer.
 
