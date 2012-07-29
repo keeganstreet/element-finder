@@ -29,6 +29,7 @@
 			return number.toString() + ' ' + (number === 1 ? singular : plural);
 		},
 		directory = process.cwd(),
+		output,
 		walk,
 		begin;
 
@@ -38,6 +39,7 @@
 		.option('-s, --selector <string>', 'search for this Sizzle selector', stripQuotes)
 		.option('-x, --extension <csv list>', 'only search files with this extension (default html)', list, ['html'])
 		.option('-i, --ignore <csv list>', 'ignore files matching this pattern (default .git, .svn)', list, ['.git', '.svn'])
+		.option('-j, --json', 'output each line as JSON (useful for reading the output in another app)')
 		.parse(process.argv);
 
 	// Show the help if no arguments were provided
@@ -46,8 +48,17 @@
 		return;
 	}
 
+	// Print output in human readable format or JSON, depending on the ouput settings
+	output = function(info) {
+		if (!program.json) {
+			console.log(info.message);
+		} else {
+			console.log(JSON.stringify(info));
+		}
+	};
+
 	if (!program.selector) {
-		console.log('The --selector argument is required. What Sizzle selector do you want to search for?');
+		output({'message' : 'The --selector argument is required. What Sizzle selector do you want to search for?'});
 		return;
 	}
 
@@ -147,16 +158,16 @@
 					if (matchesLen > 0) {
 						numberOfFilesWithMatches += 1;
 						totalMatches += matchesLen;
-						console.log('Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath);
+						output({'message' : 'Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath});
 					}
 					if (i === numberOfFiles - 1) {
-						console.log('\nFound ' + pluralise(totalMatches, 'match', 'matches') + ' in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + '.');
+						output({'message' : '\nFound ' + pluralise(totalMatches, 'match', 'matches') + ' in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + '.'});
 					}
 				}
 			});
 			progressBar.tick();
 			if (i === numberOfFiles - 1) {
-				console.log('\n');
+				output({'message' : '\n'});
 			}
 		};
 
@@ -166,7 +177,7 @@
 				throw err;
 			}
 			numberOfFiles = files.length;
-			console.log('Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".');
+			output({'message' : 'Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".'});
 			progressBar = new ProgressBar('[:bar] :percent :elapseds', {total: numberOfFiles, width: 20});
 			for (i = 0; i < numberOfFiles; i += 1) {
 				processFile(i, files[i]);
