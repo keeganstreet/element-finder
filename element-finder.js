@@ -35,7 +35,7 @@
 
 	// Initialise CLI
 	program
-		.version('0.0.1')
+		.version('0.0.2')
 		.option('-s, --selector <string>', 'search for this Sizzle selector', stripQuotes)
 		.option('-x, --extension <csv list>', 'only search files with this extension (default html)', list, ['html'])
 		.option('-i, --ignore <csv list>', 'ignore files matching this pattern (default .git, .svn)', list, ['.git', '.svn'])
