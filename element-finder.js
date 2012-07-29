@@ -50,15 +50,18 @@
 
 	// Print output in human readable format or JSON, depending on the ouput settings
 	output = function(info) {
-		if (!program.json) {
-			console.log(info.message);
-		} else {
+		if (program.json) {
 			console.log(JSON.stringify(info));
+		} else if (info.message) {
+			console.log(info.message);
 		}
 	};
 
 	if (!program.selector) {
-		output({'message' : 'The --selector argument is required. What Sizzle selector do you want to search for?'});
+		output({
+			'status' : 'error',
+			'message' : 'The --selector argument is required. What Sizzle selector do you want to search for?'
+		});
 		return;
 	}
 
@@ -158,14 +161,34 @@
 					if (matchesLen > 0) {
 						numberOfFilesWithMatches += 1;
 						totalMatches += matchesLen;
-						output({'message' : 'Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath});
+						output({
+							'status' : 'foundMatch',
+							'file' : filePath,
+							'matches' : matchesLen,
+							'message' : 'Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath
+						});
 					}
 					if (i === numberOfFiles - 1) {
-						output({'message' : '\nFound ' + pluralise(totalMatches, 'match', 'matches') + ' in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + '.'});
+						output({
+							'status' : 'complete',
+							'totalMatches' : totalMatches,
+							'numberOfFiles' : numberOfFiles,
+							'numberOfFilesWithMatches' : numberOfFilesWithMatches,
+							'message' : '\nFound ' + pluralise(totalMatches, 'match', 'matches') + ' in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + '.'
+						});
 					}
 				}
 			});
-			progressBar.tick();
+			if (program.json) {
+				output({
+					'status' : 'processingFile',
+					'file' : filePath,
+					'fileNumber' : i + 1,
+					'numberOfFiles' : numberOfFiles
+				});
+			} else {
+				progressBar.tick();
+			}
 			if (i === numberOfFiles - 1) {
 				output({'message' : '\n'});
 			}
@@ -177,8 +200,14 @@
 				throw err;
 			}
 			numberOfFiles = files.length;
-			output({'message' : 'Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".'});
-			progressBar = new ProgressBar('[:bar] :percent :elapseds', {total: numberOfFiles, width: 20});
+			output({
+				'status' : 'countedFiles',
+				'numberOfFiles' : 'numberOfFiles',
+				'message' : 'Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".'
+			});
+			if (!program.json) {
+				progressBar = new ProgressBar('[:bar] :percent :elapseds', {total: numberOfFiles, width: 20});
+			}
 			for (i = 0; i < numberOfFiles; i += 1) {
 				processFile(i, files[i]);
 			}
