@@ -190,9 +190,9 @@
 				});
 			} else {
 				progressBar.tick();
-			}
-			if (i === numberOfFiles - 1) {
-				output({'message' : '\n'});
+				if (i === numberOfFiles - 1) {
+					output({'message' : '\n'});
+				}
 			}
 		};
 
