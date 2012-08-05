@@ -149,7 +149,23 @@
 			numberOfFilesWithMatches = 0,
 			totalMatches = 0,
 			processFile,
-			progressBar;
+			progressBar,
+			trimLines;
+
+		// Returns the first x lines of a string
+		trimLines = function(input, x) {
+			var endIndex = 0,
+				nextIndex;
+			while ((nextIndex = input.indexOf('\n', endIndex + 1)) > -1 && x > 0) {
+				x -= 1;
+				endIndex = nextIndex;
+			}
+			if (x > 0) {
+				// Less than x lines where found, so return the entire string
+				return input;
+			}
+			return input.substring(0, endIndex);
+		};
 
 		processFile = function (i, filePath) {
 			var data = fs.readFileSync(filePath, 'utf8');
@@ -158,14 +174,20 @@
 				src: [sizzle],
 				done: function (errors, window) {
 					var matches = window.Sizzle(program.selector),
-						matchesLen = matches.length;
+						matchesLen = matches.length,
+						matchesDetails = [],
+						i;
 					if (matchesLen > 0) {
 						numberOfFilesWithMatches += 1;
 						totalMatches += matchesLen;
+						for (i = 0; i < matchesLen; i += 1) {
+							matchesDetails.push(trimLines(matches[i].outerHTML, 2));
+						}
 						output({
 							'status' : 'foundMatch',
 							'file' : filePath,
 							'matches' : matchesLen,
+							'matchesDetails' : matchesDetails,
 							'message' : 'Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath
 						});
 					}
