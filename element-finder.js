@@ -204,7 +204,7 @@
 			numberOfFiles = files.length;
 			output({
 				'status' : 'countedFiles',
-				'numberOfFiles' : 'numberOfFiles',
+				'numberOfFiles' : numberOfFiles,
 				'message' : 'Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".'
 			});
 			if (!program.json) {
