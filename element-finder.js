@@ -4,7 +4,8 @@
 
 	'use strict';
 
-	var fs = require('fs'),
+	var startTime = Date.now(),
+		fs = require('fs'),
 		jsdom = require('jsdom'),
 		program = require('commander'),
 		ProgressBar = require('progress'),
@@ -174,6 +175,7 @@
 							'totalMatches' : totalMatches,
 							'numberOfFiles' : numberOfFiles,
 							'numberOfFilesWithMatches' : numberOfFilesWithMatches,
+							'duration' : (Date.now() - startTime) / 1000,
 							'message' : '\nFound ' + pluralise(totalMatches, 'match', 'matches') + ' in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + '.'
 						});
 					}
