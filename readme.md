@@ -24,7 +24,7 @@ Search for elements matching the `ul.boxes .box` selector, but ignore any files 
     elfinder -s "ul.boxes .box" -i ".git, .svn, partials"
 
 
-## Intallation
+## Intallation (Mac OSX)
 
 1. Install Node JS: http://nodejs.org/#download
 
@@ -55,6 +55,35 @@ Search for elements matching the `ul.boxes .box` selector, but ignore any files 
         ln -s "/Users/kestreet/Dropbox/Projects/element-finder/element-finder.js" /usr/local/bin/elfinder
 
 7. Crack open a beer.
+
+
+## Intallation (Windows)
+
+Note: The first two steps are included because one of Element Finder's dependencies, [jsdom](https://github.com/tmpvar/jsdom), requires Python and Microsoft Visual C++ 2010.
+
+1. Install Python [2.7](http://www.python.org/getit/releases/2.7.3/).
+
+2. Install [Microsoft Visual C++ 2010](http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express).
+
+3. Install Node JS: http://nodejs.org/#download
+
+4. Get the Element Finder source. Download it or clone it from GitHub: https://github.com/keeganstreet/element-finder
+
+5. CD into the element-finder directory
+
+6. Install the dependencies with npm (npm comes with Node JS):
+
+        npm install
+		
+	Note: If this step fails and the error message mentions JSDom or Contextify, the instructions for [Installing JSDom on Windows](http://www.steveworkman.com/node-js/2012/installing-jsdom-on-windows/) may help.
+
+7. I don't know of a way of making specific JavaScript files like element-finder.js executable on Windows, so to run Element Finder on Windows, you will need to follow these steps:
+
+	7.1. CD into the directory you want to search.
+	
+	7.2. Tell Node to run element-finder.js:
+	
+		node c:\path\to\element-finder.js -s ".awesome-list"
 
 
 ## Errors you might encounter
