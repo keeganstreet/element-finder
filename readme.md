@@ -59,9 +59,9 @@ Search for elements matching the `ul.boxes .box` selector, but ignore any files 
 
 ## Intallation (Windows)
 
-Note: The first two steps are included because one of Element Finder's dependencies, [jsdom](https://github.com/tmpvar/jsdom), requires Python and Microsoft Visual C++ 2010.
+Note: The first two steps are included because one of Element Finder's dependencies, [jsdom](https://github.com/tmpvar/jsdom), requires Python and Microsoft Visual C++ 2010 to compile.
 
-1. Install Python [2.7](http://www.python.org/getit/releases/2.7.3/).
+1. Install [Python 2.7](http://www.python.org/getit/releases/2.7.3/).
 
 2. Install [Microsoft Visual C++ 2010](http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express).
 
