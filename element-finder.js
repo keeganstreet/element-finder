@@ -176,12 +176,12 @@
 					var matches = window.Sizzle(program.selector),
 						matchesLen = matches.length,
 						matchesDetails = [],
-						i;
+						matchI;
 					if (matchesLen > 0) {
 						numberOfFilesWithMatches += 1;
 						totalMatches += matchesLen;
-						for (i = 0; i < matchesLen; i += 1) {
-							matchesDetails.push(trimLines(matches[i].outerHTML, 2));
+						for (matchI = 0; matchI < matchesLen; matchI += 1) {
+							matchesDetails.push(trimLines(matches[matchI].outerHTML, 2));
 						}
 						output({
 							'status' : 'foundMatch',
