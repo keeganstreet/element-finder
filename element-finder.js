@@ -227,6 +227,7 @@
 			output({
 				'status' : 'countedFiles',
 				'selector' : program.selector,
+				'directory' : directory,
 				'extension' : program.extension,
 				'ignore' : program.ignore,
 				'numberOfFiles' : numberOfFiles,
