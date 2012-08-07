@@ -226,6 +226,9 @@
 			numberOfFiles = files.length;
 			output({
 				'status' : 'countedFiles',
+				'selector' : program.selector,
+				'extension' : program.extension,
+				'ignore' : program.ignore,
 				'numberOfFiles' : numberOfFiles,
 				'message' : 'Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".'
 			});
