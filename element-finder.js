@@ -228,8 +228,8 @@
 				'status' : 'countedFiles',
 				'selector' : program.selector,
 				'directory' : directory,
-				'extension' : program.extension,
-				'ignore' : program.ignore,
+				'extension' : program.extension.join(', '),
+				'ignore' : program.ignore.join(', '),
 				'numberOfFiles' : numberOfFiles,
 				'message' : 'Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".'
 			});
