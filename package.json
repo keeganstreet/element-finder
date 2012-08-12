@@ -16,6 +16,9 @@
 		"url": "https://github.com/keeganstreet/element-finder/issues"
 	},
 	"main": "element-finder",
+	"bin": {
+		"elfinder": "./element-finder.js"
+	},
 	"engines": {
 		"node": "~0.8.x"
 	},
