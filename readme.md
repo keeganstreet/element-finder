@@ -24,7 +24,18 @@ Search for elements matching the `ul.boxes .box` selector, but ignore any files 
     elfinder -s "ul.boxes .box" -i ".git, .svn, partials"
 
 
-## Intallation (Mac OSX)
+## Installation with npm (recommended)
+
+1. Install Node JS: http://nodejs.org/#download
+
+2. Install elfinder globally with npm (npm comes with Node JS):
+
+        npm install -g elfinder
+
+Element Finder is a command line tool so it is best to install in globally with npm.
+
+
+## Manual installation (Mac OSX)
 
 1. Install Node JS: http://nodejs.org/#download
 
@@ -57,7 +68,7 @@ Search for elements matching the `ul.boxes .box` selector, but ignore any files 
 7. Crack open a beer.
 
 
-## Intallation (Windows)
+## Manual installation (Windows)
 
 Note: The first two steps are included because one of Element Finder's dependencies, [jsdom](https://github.com/tmpvar/jsdom), requires Python and Microsoft Visual C++ 2010 to compile.
 
