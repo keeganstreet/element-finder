@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/keeganstreet/element-finder.png)](http://travis-ci.org/keeganstreet/element-finder)
 # Element Finder
 
 Find in Files with CSS selectors.
