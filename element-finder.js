@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/*globals require, __dirname, process, console */
+
 (function () {
 
 	'use strict';
@@ -29,7 +31,6 @@
 		pluralise = function (number, singular, plural) {
 			return number.toString() + ' ' + (number === 1 ? singular : plural);
 		},
-		directory = process.cwd(),
 		output,
 		walk,
 		begin;
@@ -41,6 +42,7 @@
 		.option('-x, --extension <csv list>', 'only search files with this extension (default html)', list, ['html'])
 		.option('-i, --ignore <csv list>', 'ignore files matching this pattern (default .git, .svn)', list, ['.git', '.svn'])
 		.option('-j, --json', 'output each line as JSON (useful for reading the output in another app)')
+		.option('-d, --directory <string>', 'the directory to search (defaults to current working directory)', stripQuotes, process.cwd())
 		.parse(process.argv);
 
 	// Show the help if no arguments were provided
@@ -218,7 +220,7 @@
 			}
 		};
 
-		walk(directory, function (err, files) {
+		walk(program.directory, function (err, files) {
 			var i;
 			if (err) {
 				throw err;
@@ -227,11 +229,11 @@
 			output({
 				'status' : 'countedFiles',
 				'selector' : program.selector,
-				'directory' : directory,
+				'directory' : program.directory,
 				'extension' : program.extension.join(', '),
 				'ignore' : program.ignore.join(', '),
 				'numberOfFiles' : numberOfFiles,
-				'message' : 'Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + directory + '".'
+				'message' : 'Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + program.directory + '".'
 			});
 			if (!program.json) {
 				progressBar = new ProgressBar('[:bar] :percent :elapseds', {total: numberOfFiles, width: 20});
@@ -248,4 +250,3 @@
 	begin();
 
 }());
-
