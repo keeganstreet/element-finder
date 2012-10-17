@@ -39,7 +39,7 @@
 	program
 		.version('0.1.1')
 		.option('-s, --selector <string>', 'search for this Sizzle selector', stripQuotes)
-		.option('-x, --extension <csv list>', 'only search files with this extension (default html)', list, ['html'])
+		.option('-x, --extension <csv list>', 'only search files with this extension (default html, htm, shtml)', list, ['html', 'htm', 'shtml'])
 		.option('-i, --ignore <csv list>', 'ignore files matching this pattern (default .git, .svn)', list, ['.git', '.svn'])
 		.option('-j, --json', 'output each line as JSON (useful for reading the output in another app)')
 		.option('-d, --directory <string>', 'the directory to search (defaults to current working directory)', stripQuotes, process.cwd())
