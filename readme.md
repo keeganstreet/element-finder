@@ -1,5 +1,7 @@
 # Element Finder
 
+[![Build Status](https://travis-ci.org/keeganstreet/element-finder.png)](https://travis-ci.org/keeganstreet/element-finder)
+
 Find in Files with CSS selectors.
 
 Element Finder is a command line app for recursively searching through a directory and finding HTML files which contain elements matching a given CSS selector. The app is built with Node JS and uses [Sizzle](http://sizzlejs.com/) as the selector engine - the same selector engine used by jQuery.
