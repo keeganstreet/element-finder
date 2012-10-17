@@ -22,9 +22,15 @@
 	"engines": {
 		"node": "~0.8.x"
 	},
+	"scripts": {
+		"test": "vows test/test.js"
+	},
 	"dependencies" : {
 		"jsdom" : "0.2.x",
 		"commander" : "0.6.x",
 		"progress" : "0.0.4"
+	},
+	"devDependencies": {
+		"cli-easy": "0.1.x"
 	}
 }
