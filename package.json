@@ -1,8 +1,8 @@
 {
 	"name" : "elfinder",
-	"version" : "0.1.2",
+	"version" : "0.2.0",
 	"description" : "Command line app for searching in HTML files for elements that match a CSS selector",
-	"keywords": ["html", "css", "find in files", "cli", "sizzle", "search", "find"],
+	"keywords": ["html", "css", "find in files", "cli", "search", "find"],
 	"homepage" : "https://github.com/keeganstreet/element-finder",
 	"author" : {
 		"name" : "Keegan Street",
@@ -26,9 +26,8 @@
 		"test": "vows test/test.js"
 	},
 	"dependencies" : {
-		"jsdom" : "0.2.x",
-		"commander" : "0.6.x",
-		"progress" : "0.0.4"
+		"cheerio" : "0.10.x",
+		"commander" : "0.6.x"
 	},
 	"devDependencies": {
 		"cli-easy": "0.1.x",

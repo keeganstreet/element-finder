@@ -8,10 +8,8 @@
 
 	var startTime = Date.now(),
 		fs = require('fs'),
-		jsdom = require('jsdom'),
+		cheerio = require('cheerio'),
 		program = require('commander'),
-		ProgressBar = require('progress'),
-		sizzle = fs.readFileSync(__dirname + '/lib/sizzle.js').toString(),
 		list = function (val) {
 			var arr = val.split(','),
 				i, len;
@@ -37,8 +35,8 @@
 
 	// Initialise CLI
 	program
-		.version('0.1.2')
-		.option('-s, --selector <string>', 'search for this Sizzle selector', stripQuotes)
+		.version('0.2.0')
+		.option('-s, --selector <string>', 'search for this CSS selector', stripQuotes)
 		.option('-x, --extension <csv list>', 'only search files with this extension (default html, htm, shtml)', list, ['html', 'htm', 'shtml'])
 		.option('-i, --ignore <csv list>', 'ignore files matching this pattern (default .git, .svn)', list, ['.git', '.svn'])
 		.option('-j, --json', 'output each line as JSON (useful for reading the output in another app)')
@@ -63,7 +61,7 @@
 	if (!program.selector) {
 		output({
 			'status' : 'error',
-			'message' : 'The --selector argument is required. What Sizzle selector do you want to search for?'
+			'message' : 'The --selector argument is required. What CSS selector do you want to search for?'
 		});
 		return;
 	}
@@ -151,7 +149,6 @@
 			numberOfFilesWithMatches = 0,
 			totalMatches = 0,
 			processFile,
-			progressBar,
 			trimLines;
 
 		// Returns the first x lines of a string
@@ -170,53 +167,37 @@
 		};
 
 		processFile = function (i, filePath) {
-			var data = fs.readFileSync(filePath, 'utf8');
-			jsdom.env({
-				html: data,
-				src: [sizzle],
-				done: function (errors, window) {
-					var matches = window.Sizzle(program.selector),
-						matchesLen = matches.length,
-						matchesDetails = [],
-						matchI;
-					if (matchesLen > 0) {
-						numberOfFilesWithMatches += 1;
-						totalMatches += matchesLen;
-						for (matchI = 0; matchI < matchesLen; matchI += 1) {
-							matchesDetails.push(trimLines(matches[matchI].outerHTML, 2));
-						}
-						output({
-							'status' : 'foundMatch',
-							'file' : filePath,
-							'matches' : matchesLen,
-							'matchesDetails' : matchesDetails,
-							'message' : 'Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath
-						});
-					}
-					if (i === numberOfFiles - 1) {
-						output({
-							'status' : 'complete',
-							'totalMatches' : totalMatches,
-							'numberOfFiles' : numberOfFiles,
-							'numberOfFilesWithMatches' : numberOfFilesWithMatches,
-							'duration' : (Date.now() - startTime) / 1000,
-							'message' : '\nFound ' + pluralise(totalMatches, 'match', 'matches') + ' in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + '.'
-						});
-					}
+			var data = fs.readFileSync(filePath, 'utf8'),
+				$ = cheerio.load(data),
+				matches = $(program.selector),
+				matchesLen = matches.length,
+				matchesDetails = [],
+				matchI,
+				duration;
+			if (matchesLen > 0) {
+				numberOfFilesWithMatches += 1;
+				totalMatches += matchesLen;
+				for (matchI = 0; matchI < matchesLen; matchI += 1) {
+					matchesDetails.push(trimLines(matches.eq(matchI).html(), 2));
 				}
-			});
-			if (program.json) {
 				output({
-					'status' : 'processingFile',
+					'status' : 'foundMatch',
 					'file' : filePath,
-					'fileNumber' : i + 1,
-					'numberOfFiles' : numberOfFiles
+					'matches' : matchesLen,
+					'matchesDetails' : matchesDetails,
+					'message' : 'Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath
 				});
-			} else {
-				progressBar.tick();
-				if (i === numberOfFiles - 1) {
-					output({'message' : '\n'});
-				}
+			}
+			if (i === numberOfFiles - 1) {
+				duration = (Date.now() - startTime) / 1000;
+				output({
+					'status' : 'complete',
+					'totalMatches' : totalMatches,
+					'numberOfFiles' : numberOfFiles,
+					'numberOfFilesWithMatches' : numberOfFilesWithMatches,
+					'duration' : duration,
+					'message' : '\nFound ' + pluralise(totalMatches, 'match', 'matches') + ' in ' + pluralise(numberOfFilesWithMatches, 'file', 'files') + ' (' + duration + ' seconds).'
+				});
 			}
 		};
 
@@ -235,9 +216,6 @@
 				'numberOfFiles' : numberOfFiles,
 				'message' : 'Searching for "' + program.selector + '" in ' + pluralise(numberOfFiles, 'file', 'files') + ' in "' + program.directory + '".'
 			});
-			if (!program.json) {
-				progressBar = new ProgressBar('[:bar] :percent :elapseds', {total: numberOfFiles, width: 20});
-			}
 			for (i = 0; i < numberOfFiles; i += 1) {
 				processFile(i, files[i]);
 			}
