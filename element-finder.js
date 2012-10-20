@@ -167,6 +167,14 @@
 		};
 
 		processFile = function (i, filePath) {
+			if (program.json) {
+				output({
+					'status' : 'processingFile',
+					'file' : filePath,
+					'fileNumber' : i + 1,
+					'numberOfFiles' : numberOfFiles
+				});
+			}
 			var data = fs.readFileSync(filePath, 'utf8'),
 				$ = cheerio.load(data),
 				matches = $(program.selector),
