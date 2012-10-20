@@ -186,7 +186,7 @@
 				numberOfFilesWithMatches += 1;
 				totalMatches += matchesLen;
 				for (matchI = 0; matchI < matchesLen; matchI += 1) {
-					matchesDetails.push(trimLines(matches.eq(matchI).html(), 2));
+					matchesDetails.push(trimLines($.html(matches.eq(matchI)), 2));
 				}
 				output({
 					'status' : 'foundMatch',
