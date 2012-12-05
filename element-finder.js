@@ -8,7 +8,7 @@
 
 	var startTime = Date.now(),
 		fs = require('fs'),
-		cheerio = require('cheerio'),
+		domtosource = require('domtosource'),
 		program = require('commander'),
 		list = function (val) {
 			var arr = val.split(','),
@@ -176,8 +176,7 @@
 				});
 			}
 			var data = fs.readFileSync(filePath, 'utf8'),
-				$ = cheerio.load(data),
-				matches = $(program.selector),
+				matches = domtosource.find(data, program.selector, true),
 				matchesLen = matches.length,
 				matchesDetails = [],
 				matchI,
@@ -186,7 +185,7 @@
 				numberOfFilesWithMatches += 1;
 				totalMatches += matchesLen;
 				for (matchI = 0; matchI < matchesLen; matchI += 1) {
-					matchesDetails.push(trimLines($.html(matches.eq(matchI)), 2));
+					matchesDetails.push(trimLines(matches[matchI].html, 2));
 				}
 				output({
 					'status' : 'foundMatch',
