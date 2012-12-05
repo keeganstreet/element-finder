@@ -25,22 +25,22 @@ var CLIeasy = require('cli-easy'),
 
 			.discuss('searching for an element')
 				.arg('-s "li"')
-				.expect('should find 12 matches in 4 files', /Found 12 matches in 4 files./)
+				.expect('should find 14 matches in 4 files', /Found 14 matches in 4 files./)
 			.undiscuss()
 
 			.discuss('searching html files only')
 				.arg('-s "li" -x "html"')
-				.expect('should find 9 matches in 3 files', /Found 9 matches in 3 files./)
+				.expect('should find 11 matches in 3 files', /Found 11 matches in 3 files./)
 			.undiscuss()
 
 			.discuss('search while ignoring the subfolder')
 				.arg('-s "li" -i "subfolder"')
-				.expect('should find 6 matches in 2 files', /Found 6 matches in 2 files./)
+				.expect('should find 8 matches in 2 files', /Found 8 matches in 2 files./)
 			.undiscuss()
 
 			.discuss('search for a more complex selector')
 				.arg('-s ".colours > .awesome-list *:first-child"')
-				.expect('should find 1 match in 1 file', /Found 1 match in 1 file./)
+				.expect('should find 2 matches in 1 file', /Found 2 matches in 1 file./)
 			.undiscuss()
 
 			.discuss('search with negation pseudo-selector')
@@ -51,6 +51,11 @@ var CLIeasy = require('cli-easy'),
 			.discuss('testing the dom structure')
 				.arg('-s "html > body > div.colours > ul.awesome-list > li"')
 				.expect('should find 3 matches in 1 file', /Found 3 matches in 1 file./)
+			.undiscuss()
+
+			.discuss('testing elements inside elements')
+				.arg('-s ".green"')
+				.expect('should find 4 matches in 1 file', /Found 4 matches in 1 file./)
 			.undiscuss()
 
 			.discuss('testing a very large HTML page')
