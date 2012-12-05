@@ -50,7 +50,7 @@
 	}
 
 	// Print output in human readable format or JSON, depending on the ouput settings
-	output = function(info) {
+	output = function (info) {
 		if (program.json) {
 			console.log(JSON.stringify(info));
 		} else if (info.message) {
@@ -152,7 +152,7 @@
 			trimLines;
 
 		// Returns the first x lines of a string
-		trimLines = function(input, x) {
+		trimLines = function (input, x) {
 			var endIndex = 0,
 				nextIndex;
 			while ((nextIndex = input.indexOf('\n', endIndex + 1)) > -1 && x > 0) {
@@ -185,7 +185,11 @@
 				numberOfFilesWithMatches += 1;
 				totalMatches += matchesLen;
 				for (matchI = 0; matchI < matchesLen; matchI += 1) {
-					matchesDetails.push(trimLines(matches[matchI].html, 2));
+					matchesDetails.push({
+						'html' : trimLines(matches[matchI].html, 2),
+						'line' : matches[matchI].line,
+						'column' : matches[matchI].column
+					});
 				}
 				output({
 					'status' : 'foundMatch',
