@@ -166,29 +166,31 @@
 			return input.substring(0, endIndex);
 		};
 
-		processFile = function (i, filePath) {
+		processFile = function (fileIndex, filePath) {
 			if (program.json) {
 				output({
 					'status' : 'processingFile',
 					'file' : filePath,
-					'fileNumber' : i + 1,
+					'fileNumber' : fileIndex + 1,
 					'numberOfFiles' : numberOfFiles
 				});
 			}
+
 			var data = fs.readFileSync(filePath, 'utf8'),
 				matches = domtosource.find(data, program.selector, true),
 				matchesLen = matches.length,
 				matchesDetails = [],
-				matchI,
+				i,
 				duration;
+
 			if (matchesLen > 0) {
 				numberOfFilesWithMatches += 1;
 				totalMatches += matchesLen;
-				for (matchI = 0; matchI < matchesLen; matchI += 1) {
+				for (i = 0; i < matchesLen; i += 1) {
 					matchesDetails.push({
-						'html' : trimLines(matches[matchI].html, 2),
-						'line' : matches[matchI].line,
-						'column' : matches[matchI].column
+						'html' : trimLines(matches[i].html, 2),
+						'line' : matches[i].line,
+						'column' : matches[i].column
 					});
 				}
 				output({
@@ -199,7 +201,8 @@
 					'message' : 'Found ' + pluralise(matchesLen, 'match', 'matches') + ' in ' + filePath
 				});
 			}
-			if (i === numberOfFiles - 1) {
+
+			if (fileIndex === numberOfFiles - 1) {
 				duration = (Date.now() - startTime) / 1000;
 				output({
 					'status' : 'complete',
