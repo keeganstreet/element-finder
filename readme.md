@@ -35,3 +35,8 @@ Search for elements matching the `ul.boxes .box` selector, but ignore any files 
         npm install -g elfinder
 
 Element Finder is a command line tool so it is best to install it globally with npm.
+
+
+## Sublime Text Package
+
+There is also a Sublime Text package. More info at https://github.com/keeganstreet/sublime-elfinder
