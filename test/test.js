@@ -60,7 +60,7 @@ var CLIeasy = require('cli-easy'),
 
 			.discuss('testing a very large HTML page')
 				.arg('-x "largepage" -s "p"')
-				.expect('should find 473 matches in 1 file', /Found 473 matches in 1 file./)
+				.expect('should find 333 matches in 1 file', /Found 333 matches in 1 file./)
 			.undiscuss()
 
 		.export(module);
