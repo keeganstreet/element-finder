@@ -177,7 +177,7 @@
 			}
 
 			var data = fs.readFileSync(filePath, 'utf8'),
-				matches = domtosource.find(data, program.selector, true),
+				matches = domtosource.find(data, program.selector),
 				matchesLen = matches.length,
 				matchesDetails = [],
 				i,
