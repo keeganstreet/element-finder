@@ -1,6 +1,6 @@
 {
 	"name" : "elfinder",
-	"version" : "0.3.0",
+	"version" : "0.3.1",
 	"description" : "Command line app for searching in HTML files for elements that match a CSS selector",
 	"keywords": ["html", "css", "find in files", "cli", "search", "find"],
 	"homepage" : "https://github.com/keeganstreet/element-finder",
@@ -20,17 +20,17 @@
 		"elfinder": "./element-finder.js"
 	},
 	"engines": {
-		"node": "~0.8.x"
+		"node": ">= 0.8.x"
 	},
 	"scripts": {
 		"test": "vows test/test.js"
 	},
 	"dependencies" : {
-		"domtosource" : "0.0.x",
-		"commander" : "0.6.x"
+		"domtosource" : "0.1.x",
+		"commander" : "2.1.x"
 	},
 	"devDependencies": {
 		"cli-easy": "0.1.x",
-		"vows": "0.6.x"
+		"vows": "0.7.x"
 	}
 }
