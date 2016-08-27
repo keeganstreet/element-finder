@@ -63,4 +63,9 @@ var CLIeasy = require('cli-easy'),
 				.expect('should find 333 matches in 1 file', /Found 333 matches in 1 file./)
 			.undiscuss()
 
+			.discuss('searching via files parameter')
+				.arg('-s "li" -f "test/example-html/page1.html, test/example-html/page2.html, test/example-html/subfolder/page4.htm"')
+				.expect('should find 11 matches in 3 files', /Found 11 matches in 3 files./)
+			.undiscuss()
+
 		.export(module);
