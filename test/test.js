@@ -2,7 +2,7 @@ var CLIeasy = require('cli-easy'),
 	assert = require('assert');
 
 	CLIeasy.describe('element-finder')
-		.use('node element-finder.js')
+		.use('node bin/element-finder.js')
 		.discuss('when using elfinder')
 		.undiscuss()
 

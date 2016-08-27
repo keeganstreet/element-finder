@@ -1,36 +1,43 @@
 {
-	"name" : "elfinder",
-	"version" : "0.3.2",
-	"description" : "Command line app for searching in HTML files for elements that match a CSS selector",
-	"keywords": ["html", "css", "find in files", "cli", "search", "find"],
-	"homepage" : "https://github.com/keeganstreet/element-finder",
-	"author" : {
-		"name" : "Keegan Street",
-		"url" : "http://keegan.st"
-	},
-	"repository" : {
-		"type" : "git",
-		"url" : "https://github.com/keeganstreet/element-finder.git"
-	},
-	"bugs": {
-		"url": "https://github.com/keeganstreet/element-finder/issues"
-	},
-	"main": "element-finder",
-	"bin": {
-		"elfinder": "./element-finder.js"
-	},
-	"engines": {
-		"node": ">= 0.8.x"
-	},
-	"scripts": {
-		"test": "vows test/test.js"
-	},
-	"dependencies" : {
-		"domtosource" : "0.1.x",
-		"commander" : "2.1.x"
-	},
-	"devDependencies": {
-		"cli-easy": "0.1.x",
-		"vows": "0.7.x"
-	}
+  "name": "elfinder",
+  "version": "0.3.2",
+  "description": "Command line app for searching in HTML files for elements that match a CSS selector",
+  "keywords": [
+    "html",
+    "css",
+    "find in files",
+    "cli",
+    "search",
+    "find"
+  ],
+  "homepage": "https://github.com/keeganstreet/element-finder",
+  "author": {
+    "name": "Keegan Street",
+    "url": "http://keegan.st"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/keeganstreet/element-finder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/keeganstreet/element-finder/issues"
+  },
+  "main": "lib/element-finder.js",
+  "bin": {
+    "elfinder": "./bin/element-finder.js"
+  },
+  "engines": {
+    "node": ">= 0.8.x"
+  },
+  "scripts": {
+    "test": "vows test/test.js"
+  },
+  "dependencies": {
+    "commander": "2.1.x",
+    "domtosource": "0.1.x"
+  },
+  "devDependencies": {
+    "cli-easy": "0.1.x",
+    "vows": "0.7.x"
+  }
 }
