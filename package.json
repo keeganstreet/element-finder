@@ -1,6 +1,6 @@
 {
   "name": "elfinder",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Command line app for searching in HTML files for elements that match a CSS selector",
   "keywords": [
     "html",
