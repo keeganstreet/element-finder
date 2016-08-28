@@ -68,4 +68,9 @@ var CLIeasy = require('cli-easy'),
 				.expect('should find 11 matches in 3 files', /Found 11 matches in 3 files./)
 			.undiscuss()
 
+			.discuss('testing input that returns zero results')
+				.arg('-s ".made-up-classname-that-is-not-used"')
+				.expect('should find zero results', /No results found/)
+			.undiscuss()
+
 		.export(module);
