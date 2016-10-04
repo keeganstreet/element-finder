@@ -21,6 +21,12 @@ var CLIeasy = require('cli-easy'),
 			.expect('should return version number', /^\d\.\d\.\d/)
 		.undiscuss()
 
+		.discuss('searching an empty file')
+			.arg('-s "li"')
+			.arg('-f test/example-html/empty.html')
+			.expect('should find 0 matches in 0 files', /Found 0 matches in 0 files./)
+		.undiscuss()
+
 		.arg('-d test/example-html')
 
 			.discuss('searching for an element')
